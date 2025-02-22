@@ -3,6 +3,7 @@ package com.example.demo.controllers;
 import com.example.demo.controllers.dtos.CartDto;
 import com.example.demo.infrastructure.LineItemDAO;
 import com.example.demo.infrastructure.ProductDAO;
+import com.example.demo.model.Cart;
 import com.example.demo.model.LineItem;
 import com.example.demo.model.Product;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +27,25 @@ public class CartController {
     @GetMapping
     CartDto detail() {
 
+        Cart cart = getCart();
+        return new CartDto(
+                cart.getLineItems().stream()
+                        .map(this::mapToDto)
+                        .toList(),
+                cart.getTotalPrice());
+    }
+
+    private CartDto.LineItemDto mapToDto(LineItem lineItem) {
+        return new CartDto.LineItemDto(
+                lineItem.getId(),
+                lineItem.getProductId(),
+                lineItem.getProductName(),
+                lineItem.getUnitPrice(),
+                lineItem.getQuantity(),
+                lineItem.getTotalPrice());
+    }
+
+    private Cart getCart() {
         List<LineItem> lineItems = lineItemDAO.findAll();
 
         lineItems.forEach(lineItem -> {
@@ -44,20 +64,6 @@ public class CartController {
                 .mapToInt(LineItem::getTotalPrice)
                 .sum();
 
-        return new CartDto(
-                lineItems.stream()
-                        .map(this::mapToDto)
-                        .toList(),
-                totalPrice);
-    }
-
-    private CartDto.LineItemDto mapToDto(LineItem lineItem) {
-        return new CartDto.LineItemDto(
-                lineItem.getId(),
-                lineItem.getProductId(),
-                lineItem.getProductName(),
-                lineItem.getUnitPrice(),
-                lineItem.getQuantity(),
-                lineItem.getTotalPrice());
+        return new Cart(lineItems, totalPrice);
     }
 }
