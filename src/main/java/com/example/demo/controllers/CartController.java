@@ -1,33 +1,27 @@
 package com.example.demo.controllers;
 
+import com.example.demo.application.CartService;
 import com.example.demo.controllers.dtos.CartDto;
-import com.example.demo.infrastructure.LineItemDAO;
-import com.example.demo.infrastructure.ProductDAO;
 import com.example.demo.model.Cart;
 import com.example.demo.model.LineItem;
-import com.example.demo.model.Product;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/cart")
 public class CartController {
 
-    private final LineItemDAO lineItemDAO;
-    private final ProductDAO productDAO;
+    private final CartService cartService;
 
-    public CartController(LineItemDAO lineItemDAO, ProductDAO productDAO) {
-        this.lineItemDAO = lineItemDAO;
-        this.productDAO = productDAO;
+    public CartController(CartService cartService) {
+        this.cartService = cartService;
     }
 
     @GetMapping
     CartDto detail() {
 
-        Cart cart = getCart();
+        Cart cart = cartService.getCart();
         return new CartDto(
                 cart.getLineItems().stream()
                         .map(this::mapToDto)
@@ -43,27 +37,5 @@ public class CartController {
                 lineItem.getUnitPrice(),
                 lineItem.getQuantity(),
                 lineItem.getTotalPrice());
-    }
-
-    private Cart getCart() {
-        List<LineItem> lineItems = lineItemDAO.findAll();
-
-        lineItems.forEach(lineItem -> {
-            String productId = lineItem.getProductId();
-            Product product = productDAO.find(productId);
-
-            int unitPrice = product.getPrice();
-            int quantity = lineItem.getQuantity();
-
-            lineItem.setProductName(product.getName());
-            lineItem.setUnitPrice(product.getPrice());
-            lineItem.setTotalPrice(unitPrice * quantity);
-        });
-
-        int totalPrice = lineItems.stream()
-                .mapToInt(LineItem::getTotalPrice)
-                .sum();
-
-        return new Cart(lineItems, totalPrice);
     }
 }
