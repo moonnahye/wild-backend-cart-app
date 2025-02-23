@@ -57,7 +57,7 @@ public class LineItem {
         this.totalPrice = totalPrice;
     }
 
-    public void setQunatity(int qunatity) {
-        this.quantity = qunatity;
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 }

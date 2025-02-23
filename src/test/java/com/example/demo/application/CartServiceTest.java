@@ -121,7 +121,7 @@ class CartServiceTest {
 
         cartService.addProduct(productId, newQuantity);
 
-        verify(lineItemDAO).upadate(argThat(lineItem ->
+        verify(lineItemDAO).update(argThat(lineItem ->
                 lineItem.getProductId().equals(productId)
                         && lineItem.getQuantity() == oldQuantity + newQuantity));
     }

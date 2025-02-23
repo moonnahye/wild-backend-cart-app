@@ -55,7 +55,7 @@ public class CartService {
             lineItemDAO.add(lineItem);
             return;
         }
-        lineItem.setQunatity(lineItem.getQuantity() + quantity);
-        lineItemDAO.upadate(lineItem);
+        lineItem.setQuantity(lineItem.getQuantity() + quantity);
+        lineItemDAO.update(lineItem);
     }
 }

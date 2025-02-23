@@ -36,7 +36,7 @@ public class LineItemDAO {
         collection.insertOne(document);
     }
 
-    public void upadate(LineItem lineItem) {
+    public void update(LineItem lineItem) {
         collection.updateOne(
                 Filters.eq("_id", new ObjectId(lineItem.getId())),
                 Updates.combine(
