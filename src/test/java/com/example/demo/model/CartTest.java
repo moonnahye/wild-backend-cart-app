@@ -57,8 +57,52 @@ class CartTest {
                         + product2.getPrice() * quantity2);
     }
 
+    @Test
+    @DisplayName("비어있는 장바구니에 상품 담기")
+    void addProduct(){
 
+        int quantity = 1;
 
+        Cart cart = new Cart(List.of());
+
+        cart.addProduct(product1, quantity);
+
+        assertThat(cart.getLineItems()).hasSize(1);
+    }
+
+    @Test
+    @DisplayName("장바구니에 없는 상품 담기")
+    void addNewProduct(){
+        int quantity = 1;
+
+        Cart cart = new Cart(List.of(
+                createLineItem(product2, 2)
+        ));
+
+        cart.addProduct(product1, quantity);
+
+        assertThat(cart.getLineItems()).hasSize(2);
+        assertThat(cart.getLineItems().get(1).getQuantity()).isEqualTo(quantity);
+    }
+
+    @Test
+    @DisplayName("장바구니에 이미있는 상품 담기")
+    void addExistingProduct(){
+
+        int oldQuantity = 1;
+        int newQuantity = 2;
+
+        Cart cart = new Cart(List.of(
+                createLineItem(product1, oldQuantity)
+        ));
+
+        cart.addProduct(product1, newQuantity);
+
+        assertThat(cart.getLineItems()).hasSize(1);
+
+        assertThat(cart.getLineItems().getFirst().getQuantity())
+                .isEqualTo(oldQuantity + newQuantity);
+    }
 
     private LineItem createLineItem(Product product, int quantity) {
         LineItem lineItem = new LineItem(product.getId(), quantity);
