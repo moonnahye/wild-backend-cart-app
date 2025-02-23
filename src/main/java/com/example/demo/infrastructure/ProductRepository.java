@@ -1,6 +1,5 @@
 package com.example.demo.infrastructure;
 
-import com.example.demo.model.LineItem;
 import com.example.demo.model.Product;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -10,13 +9,14 @@ import org.bson.types.ObjectId;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
-public class ProductDAO {
+public class ProductRepository {
 
     private final MongoDatabase mongoDatabase;
 
-    public ProductDAO(MongoDatabase mongoDatabase) {
+    public ProductRepository(MongoDatabase mongoDatabase) {
         this.mongoDatabase = mongoDatabase;
     }
 
@@ -33,5 +33,11 @@ public class ProductDAO {
                 document.getString("name"),
                 document.getInteger("price")
         );
+    }
+
+    public List<Product> findAllByIds(List<String> productIds) {
+        return productIds.stream()
+                .map(this::find)
+                .toList();
     }
 }

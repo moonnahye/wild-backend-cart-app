@@ -13,11 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class LineItemDAO {
+public class LineItemRepository {
 
     private final MongoCollection<Document> collection;
 
-    public LineItemDAO(MongoDatabase mongoDatabase) {
+    public LineItemRepository(MongoDatabase mongoDatabase) {
         this.collection = mongoDatabase.getCollection("line_items");
     }
 
