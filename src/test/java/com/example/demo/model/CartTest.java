@@ -13,16 +13,16 @@ class CartTest {
 
     private Product product1;
     private Product product2;
-    private String productOption1;
-    private String productOption2;
+    private ProductOption productOption1;
+    private ProductOption productOption2;
 
     @BeforeEach
     void setUp() {
-        product1 = new Product("product-1", "product #1", 5000);
-        product2 = new Product("product-2", "product #2", 3000);
+        product1 = new Product(new ProductId("product-1"), "product #1", 5000);
+        product2 = new Product(new ProductId("product-2"), "product #2", 3000);
 
-        productOption1 = "productOption-1";
-        productOption2 = "productOption-2";
+        productOption1 = new ProductOption("red", "M");
+        productOption2 = new ProductOption("black", "L");
     }
 
     @Test
@@ -94,7 +94,7 @@ class CartTest {
 
 
 
-    private LineItem createLineItem(Product product, String productOption, int quantity) {
+    private LineItem createLineItem(Product product, ProductOption productOption, int quantity) {
         return new LineItem(product.getId(), productOption, quantity);
     }
 

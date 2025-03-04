@@ -22,25 +22,26 @@ public class Cart {
         return totalQuantity;
     }
 
-    public void addProduct(String productId, String productOption, int quantity) {
+    public void addProduct(ProductId productId, ProductOption productOption, int quantity) {
 
-        checkValidQuantity(quantity);
 
         LineItem lineItem = findLineItem(productId, productOption);
 
         if (lineItem != null) {
-            lineItem.addQuantity(quantity);
+            lineItem.addQuantity(quantity, productOption);
             calculateTotalQuantity();
+            checkValidQuantity();
             return;
         }
 
         lineItem = new LineItem(productId, productOption, quantity);
         lineItems.add(lineItem);
         calculateTotalQuantity();
+        checkValidQuantity();
     }
 
-    public void checkValidQuantity(int quantity) {
-        if (totalQuantity + quantity> 20) {
+    public void checkValidQuantity() {
+        if (totalQuantity > 20) {
             throw new IllegalArgumentException("담을수 있는 수량을 초과했습니다.");
         }
     }
@@ -52,10 +53,10 @@ public class Cart {
     }
 
 
-    private LineItem findLineItem(String productId, String productOption) {
+    private LineItem findLineItem(ProductId productId, ProductOption productOption) {
         return lineItems.stream()
-                .filter(i -> i.getProductId().equals(productId)
-                        && i.getProductOption().equals(productOption))
+                .filter(lineItem ->
+                        lineItem.isSameProduct(productId,productOption))
                 .findFirst()
                 .orElse(null);
     }

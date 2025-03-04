@@ -1,18 +1,17 @@
 package com.example.demo.model;
 
-import java.util.UUID;
 
 public class LineItem {
 
-    private final String id;
-    private final String productId;
-    private final String productOption;
+    private final LineItemId id;
+    private final ProductId productId;
+    private final ProductOption productOption;
 
     private int quantity;
 
 
-    public LineItem(String productId, String productOption, int quantity) {
-        this.id = "LineItem-"+ UUID.randomUUID();
+    public LineItem(ProductId productId, ProductOption productOption, int quantity) {
+        this.id = LineItemId.generate();
         this.productId = productId;
         this.productOption = productOption;
         this.quantity = quantity;
@@ -22,17 +21,15 @@ public class LineItem {
         return quantity;
     }
 
-    public String getProductId() {
-        return productId;
-    }
 
-    public String getProductOption() {
-        return productOption;
-    }
-
-
-
-    public void addQuantity(int quantity) {
+    public void addQuantity(int quantity, ProductOption productOption) {
+        if(!this.productOption.equals(productOption)) {
+            return;
+        }
         this.quantity += quantity;
+    }
+
+    public boolean isSameProduct(ProductId productId, ProductOption productOption) {
+        return this.productId.equals(productId) && this.productOption.equals(productOption);
     }
 }

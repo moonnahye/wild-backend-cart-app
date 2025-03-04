@@ -11,7 +11,7 @@ class ProductTest {
 
     @BeforeEach
     void setUp() {
-        product = new Product("product-1", "Product #1", 5000);
+        product = new Product(new ProductId("product-1"), "Product #1", 5000);
     }
 
     @Test
