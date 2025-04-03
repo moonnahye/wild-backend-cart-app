@@ -1,8 +1,16 @@
 package com.example.demo.model;
 
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name="products")
 public class Product {
 
+    @EmbeddedId
     private ProductId id;
+
     private String name;
     private int price;
 

@@ -1,16 +1,36 @@
 package com.example.demo.model;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@Entity
+@Table(name="carts")
 public class Cart {
 
-    private List<LineItem> lineItems;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<LineItem> lineItems = new ArrayList<>();
+
     private int totalQuantity;
+
+    public Cart() {
+    }
 
     public Cart(List<LineItem> lineItems) {
         this.lineItems = new ArrayList<>(lineItems);
+        lineItems.forEach(lineItem -> lineItem.setCart(this));
         calculateTotalQuantity();
     }
 
@@ -24,7 +44,6 @@ public class Cart {
 
     public void addProduct(ProductId productId, ProductOption productOption, int quantity) {
 
-
         LineItem lineItem = findLineItem(productId, productOption);
 
         if (lineItem != null) {
@@ -36,6 +55,7 @@ public class Cart {
 
         lineItem = new LineItem(productId, productOption, quantity);
         lineItems.add(lineItem);
+        lineItem.setCart(this);
         calculateTotalQuantity();
         checkValidQuantity();
     }
@@ -61,4 +81,14 @@ public class Cart {
                 .orElse(null);
     }
 
+    public void clearItems() {
+        lineItems.clear();
+        calculateTotalQuantity();
+    }
+
+    public void removeLineItemById(LineItemId lineItemId) {
+        if (lineItemId == null) return;
+        lineItems.removeIf(lineItem ->lineItem.getId().equals(lineItemId));
+        calculateTotalQuantity();
+    }
 }

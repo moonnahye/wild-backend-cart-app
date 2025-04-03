@@ -1,7 +1,10 @@
 package com.example.demo.model;
 
+import jakarta.persistence.Embeddable;
+
 import java.util.UUID;
 
+@Embeddable
 public record LineItemId(
      String id
 ) {
