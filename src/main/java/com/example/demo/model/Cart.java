@@ -30,8 +30,7 @@ public class Cart {
 
     public Cart(List<LineItem> lineItems) {
         this.lineItems = new ArrayList<>(lineItems);
-        lineItems.forEach(lineItem -> lineItem.setCart(this));
-        calculateTotalQuantity();
+        updateTotalQuantity();
     }
 
     public List<LineItem> getLineItems() {
@@ -47,29 +46,24 @@ public class Cart {
         LineItem lineItem = findLineItem(productId, productOption);
 
         if (lineItem != null) {
-            lineItem.addQuantity(quantity, productOption);
-            calculateTotalQuantity();
-            checkValidQuantity();
+            lineItem.addQuantity(quantity);
+            updateTotalQuantity();
             return;
         }
 
         lineItem = new LineItem(productId, productOption, quantity);
         lineItems.add(lineItem);
-        lineItem.setCart(this);
-        calculateTotalQuantity();
-        checkValidQuantity();
+        updateTotalQuantity();
     }
 
-    public void checkValidQuantity() {
-        if (totalQuantity > 20) {
-            throw new IllegalArgumentException("담을수 있는 수량을 초과했습니다.");
-        }
-    }
 
-    private void calculateTotalQuantity() {
+    private void updateTotalQuantity() {
         this.totalQuantity = lineItems.stream()
                 .mapToInt(LineItem::getQuantity)
                 .sum();
+        if (totalQuantity > 20) {
+            throw new IllegalArgumentException("담을수 있는 수량을 초과했습니다.");
+        }
     }
 
 
@@ -83,12 +77,11 @@ public class Cart {
 
     public void clearItems() {
         lineItems.clear();
-        calculateTotalQuantity();
+        updateTotalQuantity();
     }
 
-    public void removeLineItemById(LineItemId lineItemId) {
-        if (lineItemId == null) return;
+    public void removeLineItem(LineItemId lineItemId) {
         lineItems.removeIf(lineItem ->lineItem.getId().equals(lineItemId));
-        calculateTotalQuantity();
+        updateTotalQuantity();
     }
 }

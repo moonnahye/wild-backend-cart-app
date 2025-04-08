@@ -8,11 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(CartController.class)
@@ -23,24 +23,24 @@ class CartControllerTest {
     @MockBean
     private CartService cartService;
 
-
     @Test
-    @DisplayName("GET /carts/{cartId}")
+    @DisplayName("GET /cart")
     void getCart() throws Exception {
-        Long cartId = 1L;
         Cart cart = new Cart();
+        Long cartId = 1L;
         when(cartService.getCart(cartId)).thenReturn(cart);
 
-        mockMvc.perform(get("/carts/{cartId}", cartId))
+        mockMvc.perform(get("/cart"))
                 .andExpect(status().isOk());
     }
 
     @Test
-    @DisplayName("DELETE /carts/{cartId}")
+    @DisplayName("DELETE /cart")
     void deleteCart() throws Exception {
+
         Long cartId = 1L;
 
-        mockMvc.perform(delete("/carts/{cartId}", cartId))
+        mockMvc.perform(delete("/cart"))
                 .andExpect(status().isNoContent());
 
         verify(cartService).clearCart(cartId);

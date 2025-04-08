@@ -15,10 +15,6 @@ public class LineItem {
     @EmbeddedId
     private LineItemId id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="cart_id")
-    private Cart cart;
-
     @Embedded
     private ProductId productId;
 
@@ -54,10 +50,7 @@ public class LineItem {
     }
 
 
-    public void addQuantity(int quantity, ProductOption productOption) {
-        if(!this.productOption.equals(productOption)) {
-            return;
-        }
+    public void addQuantity(int quantity) {
         this.quantity += quantity;
     }
 
@@ -65,7 +58,4 @@ public class LineItem {
         return this.productId.equals(productId) && this.productOption.equals(productOption);
     }
 
-    public void setCart(Cart cart) {
-        this.cart = cart;
-    }
 }

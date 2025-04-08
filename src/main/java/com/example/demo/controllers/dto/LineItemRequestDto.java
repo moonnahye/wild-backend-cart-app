@@ -1,31 +1,22 @@
 package com.example.demo.controllers.dto;
 
-public class LineItemRequestDto {
-    private String productId;
-    private String color;
-    private String size;
-    private int quantity;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 
-    public LineItemRequestDto(String productId, String color, String size, int quantity) {
-        this.productId = productId;
-        this.color = color;
-        this.size = size;
-        this.quantity = quantity;
-    }
+public record LineItemRequestDto(
 
-    public String getProductId() {
-        return productId;
-    }
+        @NotBlank(message = "상품 ID는 필수입니다.")
+        String productId,
 
-    public String getColor() {
-        return color;
-    }
+        @NotBlank(message = "색상은 필수입니다.")
+        String color,
 
-    public String getSize() {
-        return size;
-    }
+        @NotBlank(message = "사이즈는 필수입니다.")
+        String size,
 
-    public int getQuantity() {
-        return quantity;
-    }
+        @Min(value = 1, message = "최소 수량은 1개입니다.")
+        @Max(value = 20, message = "최대 수량은 20개입니다.")
+        int quantity
+) {
 }

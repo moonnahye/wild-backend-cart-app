@@ -6,10 +6,10 @@ import java.util.UUID;
 
 @Embeddable
 public record LineItemId(
-     String id
+     UUID id
 ) {
 
     public static LineItemId generate() {
-        return new LineItemId("lineItemId-" + UUID.randomUUID());
+        return new LineItemId(UUID.randomUUID());
     }
 }

@@ -12,6 +12,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.UUID;
+
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -27,7 +29,7 @@ class LineItemControllerTest {
     private CartService cartService;
 
     @Test
-    @DisplayName("POST /carts/{cartId}/line-items")
+    @DisplayName("POST /cart/line-items")
     void addProduct() throws Exception {
         Long cartId = 1L;
         String json = """
@@ -39,7 +41,7 @@ class LineItemControllerTest {
                 }
                 """;
 
-        mockMvc.perform(post("/carts/{cartId}/line-items", cartId)
+        mockMvc.perform(post("/cart/line-items")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isCreated());
@@ -53,15 +55,15 @@ class LineItemControllerTest {
     }
 
     @Test
-    @DisplayName("DELETE /carts/{cartId}/line-items/{lineItemId}")
+    @DisplayName("DELETE /cart/line-items/{lineItemId}")
     void removeProduct() throws Exception {
         Long cartId = 1L;
-        String lineItemId = "lineItem-1";
+        UUID lineItemId = UUID.randomUUID();
 
-        mockMvc.perform(delete("/carts/{cartId}/line-items/{lineItemId}", cartId, lineItemId))
+        mockMvc.perform(delete("/cart/line-items/{lineItemId}", lineItemId))
                 .andExpect(status().isNoContent());
 
-        verify(cartService).removeItemFromCart(
+        verify(cartService).removeLineItem(
                 eq(cartId),
                 eq(new LineItemId(lineItemId))
         );

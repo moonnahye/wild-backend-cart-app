@@ -2,7 +2,6 @@ package com.example.demo.application;
 
 import com.example.demo.model.Cart;
 import com.example.demo.model.LineItemId;
-import com.example.demo.model.Product;
 import com.example.demo.model.ProductId;
 import com.example.demo.model.ProductOption;
 import com.example.demo.repository.CartRepository;
@@ -25,17 +24,17 @@ public class CartService {
     public void addItemToCart(Long cartId, ProductId productId, ProductOption option, int quantity) {
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new IllegalArgumentException("장바구니가 존재하지 않습니다."));
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new IllegalArgumentException("상품이 존재하지 않습니다."));
-
+        if (!productRepository.existsById(productId)) {
+            throw new IllegalArgumentException("상품이 존재하지 않습니다.");
+        }
         cart.addProduct(productId, option, quantity);
     }
 
-    public void removeItemFromCart(Long cartId, LineItemId lineItemId) {
+    public void removeLineItem(Long cartId, LineItemId lineItemId) {
         Cart cart = cartRepository.findById(cartId)
                 .orElseThrow(() -> new IllegalArgumentException("장바구니가 존재하지 않습니다."));
 
-        cart.removeLineItemById(lineItemId);
+        cart.removeLineItem(lineItemId);
     }
 
     public void clearCart(Long cartId) {
