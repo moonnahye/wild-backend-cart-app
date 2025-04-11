@@ -31,7 +31,6 @@ class LineItemControllerTest {
     @Test
     @DisplayName("POST /cart/line-items")
     void addProduct() throws Exception {
-        Long cartId = 1L;
         String json = """
                 {
                     "productId": "product-1",
@@ -47,7 +46,6 @@ class LineItemControllerTest {
                 .andExpect(status().isCreated());
 
         verify(cartService).addItemToCart(
-                eq(cartId),
                 eq(new ProductId("product-1")),
                 eq(new ProductOption("blue", "M")),
                 eq(2)
@@ -57,14 +55,12 @@ class LineItemControllerTest {
     @Test
     @DisplayName("DELETE /cart/line-items/{lineItemId}")
     void removeProduct() throws Exception {
-        Long cartId = 1L;
-        UUID lineItemId = UUID.randomUUID();
+        String lineItemId = UUID.randomUUID().toString();
 
         mockMvc.perform(delete("/cart/line-items/{lineItemId}", lineItemId))
                 .andExpect(status().isNoContent());
 
         verify(cartService).removeLineItem(
-                eq(cartId),
                 eq(new LineItemId(lineItemId))
         );
     }

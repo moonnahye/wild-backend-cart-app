@@ -27,8 +27,8 @@ class CartControllerTest {
     @DisplayName("GET /cart")
     void getCart() throws Exception {
         Cart cart = new Cart();
-        Long cartId = 1L;
-        when(cartService.getCart(cartId)).thenReturn(cart);
+
+        when(cartService.getCart()).thenReturn(cart);
 
         mockMvc.perform(get("/cart"))
                 .andExpect(status().isOk());
@@ -38,11 +38,9 @@ class CartControllerTest {
     @DisplayName("DELETE /cart")
     void deleteCart() throws Exception {
 
-        Long cartId = 1L;
-
         mockMvc.perform(delete("/cart"))
                 .andExpect(status().isNoContent());
 
-        verify(cartService).clearCart(cartId);
+        verify(cartService).clearCart();
     }
 }

@@ -33,6 +33,10 @@ public class Cart {
         updateTotalQuantity();
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public List<LineItem> getLineItems() {
         return Collections.unmodifiableList(lineItems);
     }

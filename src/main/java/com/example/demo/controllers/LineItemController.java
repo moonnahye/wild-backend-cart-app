@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/cart/line-items")
@@ -27,15 +26,12 @@ public class LineItemController {
 
     private final CartService cartService;
 
-    private Long cartId =1L;
-
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void create(
             @Valid @RequestBody LineItemRequestDto requestDto) {
 
         cartService.addItemToCart(
-                cartId,
                 new ProductId(requestDto.productId()),
                 new ProductOption(requestDto.color(), requestDto.size()),
                 requestDto.quantity());
@@ -44,10 +40,10 @@ public class LineItemController {
 
     @DeleteMapping("/{lineItemId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteLineItem(@PathVariable UUID lineItemId) {
+    public void deleteLineItem(@PathVariable String lineItemId) {
 
         cartService.removeLineItem(
-                cartId, new LineItemId(lineItemId));
+                new LineItemId(lineItemId));
     }
 
 }

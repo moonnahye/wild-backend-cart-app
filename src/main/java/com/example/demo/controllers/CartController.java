@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/cart")
 public class CartController {
 
-    private Long cartId = 1L;
-
     public CartController(CartService cartService) {
         this.cartService = cartService;
     }
@@ -26,10 +24,9 @@ public class CartController {
     @GetMapping
     public CartResponseDto getCart() {
 
-        Cart cart = cartService.getCart(cartId);
+        Cart cart = cartService.getCart();
 
         return new CartResponseDto(
-                cartId,
                 cart.getTotalQuantity(),
                 cart.getLineItems().stream()
                         .map(lineItem -> new LineItemResponseDto(
@@ -45,7 +42,7 @@ public class CartController {
 
     @DeleteMapping()
     public ResponseEntity<Void> deleteCart() {
-        cartService.clearCart(cartId);
+        cartService.clearCart();
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
