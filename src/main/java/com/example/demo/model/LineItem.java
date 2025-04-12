@@ -3,13 +3,10 @@ package com.example.demo.model;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="line_items")
+@Table(name = "line_items")
 public class LineItem {
 
     @EmbeddedId

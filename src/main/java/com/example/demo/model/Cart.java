@@ -1,6 +1,8 @@
 package com.example.demo.model;
 
+import com.example.demo.exception.CartQuantityLimitException;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,6 +22,9 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
+    private String userId;
+
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LineItem> lineItems = new ArrayList<>();
 
@@ -28,7 +33,12 @@ public class Cart {
     public Cart() {
     }
 
-    public Cart(List<LineItem> lineItems) {
+    public Cart(String userId) {
+        this.userId = userId;
+    }
+
+    public Cart(String userId, List<LineItem> lineItems) {
+        this.userId = userId;
         this.lineItems = new ArrayList<>(lineItems);
         updateTotalQuantity();
     }
@@ -66,7 +76,7 @@ public class Cart {
                 .mapToInt(LineItem::getQuantity)
                 .sum();
         if (totalQuantity > 20) {
-            throw new IllegalArgumentException("담을수 있는 수량을 초과했습니다.");
+            throw new CartQuantityLimitException();
         }
     }
 

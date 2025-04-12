@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+import com.example.demo.exception.CartQuantityLimitException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,7 +29,7 @@ class CartTest {
     @Test
     @DisplayName("빈 장바구니의 수량은 0이다.")
     void cartTotalQuantityIsZero() {
-        Cart cart = new Cart(List.of());
+        Cart cart = new Cart();
 
         assertThat(cart.getTotalQuantity()).isZero();
     }
@@ -36,7 +37,7 @@ class CartTest {
     @Test
     @DisplayName("빈 장바구니에 물건 추가하면 장바구니의 전체수량은 추가한 수량과 같다.")
     void addProductToEmptyCart() {
-        Cart cart = new Cart(List.of());
+        Cart cart = new Cart();
 
         int quantity = 1;
         cart.addProduct(product1.getId(), productOption1, quantity);
@@ -102,7 +103,7 @@ class CartTest {
 
         assertThatThrownBy(
                 () -> cart.addProduct(product1.getId(), productOption1, newQuantity)
-        ).isInstanceOf(IllegalArgumentException.class);
+        ).isInstanceOf(CartQuantityLimitException.class);
     }
 
     @Test
